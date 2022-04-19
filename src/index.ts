@@ -1,5 +1,3 @@
-/* eslint-disable no-empty */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import '@formatjs/intl-displaynames/polyfill';
 import '@formatjs/intl-listformat/polyfill-force';
@@ -19,6 +17,8 @@ import {
 } from 'date-fns';
 import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
+
+import { loadPolyfillData } from './loadPolyfillData';
 
 interface Language {
   dict: Record<string, unknown>;
@@ -119,30 +119,6 @@ interface Locales {
   zhTW: Locale;
 }
 
-const loadPolyfillData = (lang: string) => {
-  //Load Lang polyfill
-  try {
-    require(`@formatjs/intl-displaynames/locale-data/${lang}`);
-  } catch (error) {}
-  try {
-    require(`@formatjs/intl-numberformat/locale-data/${lang}`);
-  } catch (error) {}
-  try {
-    require(`@formatjs/intl-listformat/locale-data/${lang}`);
-  } catch (error) {}
-
-  //Load Lang polyfill
-  try {
-    require(`@formatjs/intl-displaynames/locale-data/${lang.split('-')[0]}`);
-  } catch (error) {}
-  try {
-    require(`@formatjs/intl-numberformat/locale-data/${lang.split('-')[0]}`);
-  } catch (error) {}
-  try {
-    require(`@formatjs/intl-listformat/locale-data/${lang.split('-')[0]}`);
-  } catch (error) {}
-};
-
 export const locales: Locales = dateFNSLocaleFiles;
 
 export const rosetty = (
@@ -202,6 +178,7 @@ export const rosetty = (
     languages: Object.keys(config),
     getCurrentLang: () => actualLang,
     //Rosetta
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t: (key: string, params?: Record<string, any>) =>
       actualLang ? rosettaInstance.t(key, params) : undefined,
     //Intl Polyfill

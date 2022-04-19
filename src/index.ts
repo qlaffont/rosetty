@@ -206,6 +206,8 @@ export const rosetty = (
       actualLang ? rosettaInstance.t(key, params) : undefined,
     //Intl Polyfill
     displayNames: (langCode: string, options: DisplayNamesOptions) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       return new Intl.DisplayNames(
         [actualConfig?.locale.code as string],
         options

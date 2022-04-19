@@ -39,7 +39,7 @@
     "trailingComma": "es5"
   },
   "name": "rosetty",
-  "author": "Quentin Laffont",
+  "author": "Flexper",
   "module": "dist/rosetty.esm.js",
   "size-limit": [
     {
@@ -51,6 +51,12 @@
       "limit": "200 KB"
     }
   ],
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov"
+    ]
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
     "@typescript-eslint/eslint-plugin": "5.19.0",

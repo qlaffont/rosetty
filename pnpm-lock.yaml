@@ -6,7 +6,7 @@ specifiers:
   '@formatjs/intl-listformat': ^6.5.3
   '@formatjs/intl-numberformat': ^7.4.3
   '@formatjs/intl-pluralrules': ^4.3.3
-  '@size-limit/preset-small-lib': ^7.0.8
+  '@size-limit/preset-small-lib': 7.0.8
   '@typescript-eslint/eslint-plugin': 5.19.0
   '@typescript-eslint/parser': 5.19.0
   date-fns: ^2.28.0
@@ -19,10 +19,10 @@ specifiers:
   np: 7.6.1
   prettier: 2.6.2
   rosetta: ^1.1.0
-  size-limit: ^7.0.8
-  tsdx: ^0.14.1
-  tslib: ^2.3.1
-  typescript: ^4.6.3
+  size-limit: 7.0.8
+  tsdx: 0.14.1
+  tslib: 2.3.1
+  typescript: 4.6.3
 
 dependencies:
   '@formatjs/ecma402-abstract': 1.11.4

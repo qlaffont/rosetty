@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import '@formatjs/intl-displaynames/polyfill';
-import '@formatjs/intl-listformat/polyfill-force';
-import '@formatjs/intl-numberformat/polyfill';
-import '@formatjs/intl-pluralrules/polyfill';
 
 import { NumberFormatOptions } from '@formatjs/ecma402-abstract';
 import { DisplayNamesOptions } from '@formatjs/intl-displaynames';
@@ -18,12 +14,32 @@ import {
 import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
 
-import { loadPolyfillData } from './loadPolyfillData';
+import { loadPolyfill, loadPolyfillData } from './loadPolyfillData';
 
 interface Language {
   dict: Record<string, unknown>;
   locale: Locale;
 }
+
+type AnyObject = Record<string, any>;
+
+type DotJoin<A extends string, B extends string> = A extends ''
+  ? B
+  : `${A}.${B}`;
+
+type DeepKeys<O extends AnyObject> = {
+  [K in keyof O]: O[K] extends AnyObject ? K : never;
+}[keyof O];
+
+type ObjectPath<
+  O extends AnyObject,
+  P extends string = '',
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  K extends string = keyof O
+> = K extends DeepKeys<O>
+  ? ObjectPath<O[K], DotJoin<P, K>>
+  : /*************/ DotJoin<P, K>;
 
 interface Locales {
   af: Locale;
@@ -119,9 +135,11 @@ interface Locales {
   zhTW: Locale;
 }
 
+loadPolyfill();
+
 export const locales: Locales = dateFNSLocaleFiles;
 
-export const rosetty = (
+export const rosetty = <T>(
   initialConfig: Record<string, Language>,
   defaultLang?: string
 ) => {
@@ -179,8 +197,10 @@ export const rosetty = (
     getCurrentLang: () => actualLang,
     //Rosetta
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    t: (key: string, params?: Record<string, any>) =>
-      actualLang ? rosettaInstance.t(key, params) : undefined,
+    t: (key: ObjectPath<T>, params?: Record<string, any>) =>
+      actualLang
+        ? rosettaInstance.t(key as unknown as string, params)
+        : undefined,
     //Intl Polyfill
     displayNames: (langCode: string, options: DisplayNamesOptions) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

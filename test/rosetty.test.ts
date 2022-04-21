@@ -129,7 +129,7 @@ describe('rosetty', () => {
   describe('t', () => {
     it('should return translated text', () => {
       const { enGB: enLocale } = locales;
-      const r = rosetty(
+      const r = rosetty<{ test: 'toto' }>(
         {
           en: {
             dict: {
@@ -146,7 +146,7 @@ describe('rosetty', () => {
 
     it('should return translated text with data', () => {
       const { enGB: enLocale } = locales;
-      const r = rosetty(
+      const r = rosetty<{ test: 'toto' }>(
         {
           en: {
             dict: {
@@ -163,6 +163,34 @@ describe('rosetty', () => {
           firstName: 'test',
         })
       ).toEqual('This is a test');
+    });
+
+    it('should be able to allow autocomplete for ts', () => {
+      const { enGB: enLocale } = locales;
+      const r = rosetty<{ test: ''; toto: { titi: '' } }>(
+        {
+          en: {
+            dict: {
+              test: 'This is a {{firstName}}',
+              toto: {
+                titi: 'toto',
+              },
+            },
+            locale: enLocale,
+          },
+        },
+        'en'
+      );
+
+      //@ts-expect-error
+      r.t('wrongekeytocheckautocomplete');
+
+      expect(
+        r.t('test', {
+          firstName: 'test',
+        })
+      ).toEqual('This is a test');
+      expect(r.t('toto.titi')).toEqual('toto');
     });
   });
 

@@ -13,17 +13,23 @@ import {
 import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
 
-import { Language, Locales, RosettyReturn } from '../types';
 import { loadPolyfill, loadPolyfillData } from './loadPolyfillData';
+import {
+  Language,
+  Locales,
+  RosettyReturn as RosettyReturnType,
+} from './types.';
 
 loadPolyfill();
 
 export const locales: Locales = dateFNSLocaleFiles;
 
+export type RosettyReturn<T> = RosettyReturnType<T>;
+
 export const rosetty = <T>(
   initialConfig: Record<string, Language>,
   defaultLang?: string
-): RosettyReturn<T> => {
+): RosettyReturnType<T> => {
   let config: Record<string, Language> = initialConfig;
   let actualConfig: Language | undefined;
   let actualLang: string | undefined;

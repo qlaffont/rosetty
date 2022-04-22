@@ -15,7 +15,7 @@ import rosetta from 'rosetta';
 
 import { loadPolyfill, loadPolyfillData } from './loadPolyfillData';
 import {
-  Language,
+  Language as LanguageType,
   Locales,
   RosettyReturn as RosettyReturnType,
 } from './types.';
@@ -25,13 +25,14 @@ loadPolyfill();
 export const locales: Locales = dateFNSLocaleFiles;
 
 export type RosettyReturn<T> = RosettyReturnType<T>;
+export type Language = LanguageType;
 
 export const rosetty = <T>(
-  initialConfig: Record<string, Language>,
+  initialConfig: Record<string, LanguageType>,
   defaultLang?: string
 ): RosettyReturnType<T> => {
-  let config: Record<string, Language> = initialConfig;
-  let actualConfig: Language | undefined;
+  let config: Record<string, LanguageType> = initialConfig;
+  let actualConfig: LanguageType | undefined;
   let actualLang: string | undefined;
 
   if (typeof initialConfig !== 'object') {
@@ -41,16 +42,19 @@ export const rosetty = <T>(
   }
 
   //Filter only languages who respect config format
-  config = Object.keys(config).reduce((acc: Record<string, Language>, lang) => {
-    if (
-      typeof config[lang] === 'object' &&
-      typeof config[lang].dict === 'object' &&
-      typeof config[lang].locale === 'object'
-    ) {
-      acc[lang] = config[lang];
-    }
-    return acc;
-  }, {});
+  config = Object.keys(config).reduce(
+    (acc: Record<string, LanguageType>, lang) => {
+      if (
+        typeof config[lang] === 'object' &&
+        typeof config[lang].dict === 'object' &&
+        typeof config[lang].locale === 'object'
+      ) {
+        acc[lang] = config[lang];
+      }
+      return acc;
+    },
+    {}
+  );
 
   const rosettaInstance = rosetta(
     Object.entries(config)

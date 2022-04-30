@@ -20,7 +20,12 @@ import {
   RosettyReturn as RosettyReturnType,
 } from './types.';
 
-loadPolyfill();
+export const loadNodePolyfill = (languages: string[]) => {
+  loadPolyfill();
+  for (const language of languages) {
+    loadPolyfillData(language);
+  }
+};
 
 export const locales: Locales = dateFNSLocaleFiles;
 
@@ -70,8 +75,6 @@ export const rosetty = <T>(
     if (!langConfig) {
       throw new Error(`rosetty: language ${lang} not found`);
     }
-
-    loadPolyfillData(lang);
 
     actualConfig = config[lang];
     actualLang = lang;

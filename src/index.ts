@@ -10,7 +10,6 @@ import {
 import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
 
-import { loadPolyfill, loadPolyfillData } from './loadPolyfillData';
 import {
   DisplayNamesOptions,
   IntlListFormatOptions,
@@ -19,13 +18,6 @@ import {
   NumberFormatOptions,
   RosettyReturn as RosettyReturnType,
 } from './types';
-
-export const loadNodePolyfill = (languages: string[]) => {
-  loadPolyfill();
-  for (const language of languages) {
-    loadPolyfillData(language);
-  }
-};
 
 export const locales: Locales = dateFNSLocaleFiles;
 

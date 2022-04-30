@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { NumberFormatOptions } from '@formatjs/ecma402-abstract';
-import { DisplayNamesOptions } from '@formatjs/intl-displaynames';
-import { IntlListFormatOptions } from '@formatjs/intl-listformat';
 import {
   format,
   formatDistance,
@@ -15,10 +12,13 @@ import rosetta from 'rosetta';
 
 import { loadPolyfill, loadPolyfillData } from './loadPolyfillData';
 import {
+  DisplayNamesOptions,
+  IntlListFormatOptions,
   Language as LanguageType,
   Locales,
+  NumberFormatOptions,
   RosettyReturn as RosettyReturnType,
-} from './types.';
+} from './types';
 
 export const loadNodePolyfill = (languages: string[]) => {
   loadPolyfill();
@@ -97,22 +97,24 @@ export const rosetty = <T>(
         ? rosettaInstance.t(key as unknown as string, params)
         : undefined,
     //Intl Polyfill
-    displayNames: (langCode: string, options: DisplayNamesOptions) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
+    displayNames: (langCode: string, options: Partial<DisplayNamesOptions>) => {
       return new Intl.DisplayNames(
         [actualConfig?.locale.code as string],
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         options
       ).of(langCode);
     },
-    listFormat: (list: string[], options: IntlListFormatOptions) => {
+    listFormat: (list: string[], options: Partial<IntlListFormatOptions>) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       return new Intl.ListFormat(actualConfig?.locale.code, options).format(
         list
       );
     },
-    numberFormat: (value: number, options: NumberFormatOptions) => {
+    numberFormat: (value: number, options: Partial<NumberFormatOptions>) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       return new Intl.NumberFormat(actualConfig?.locale.code, options).format(
         value
       );

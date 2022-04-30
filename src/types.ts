@@ -1,6 +1,3 @@
-import { NumberFormatOptions } from '@formatjs/ecma402-abstract';
-import { DisplayNamesOptions } from '@formatjs/intl-displaynames';
-import { IntlListFormatOptions } from '@formatjs/intl-listformat';
 import { Locale } from 'date-fns';
 
 type AnyObject = Record<string, any>;
@@ -131,15 +128,15 @@ export interface RosettyReturn<T> {
   t: (key: ObjectPath<T>, params?: Record<string, any>) => string | undefined;
   displayNames: (
     langCode: string,
-    options: DisplayNamesOptions
+    options: Partial<DisplayNamesOptions>
   ) => string | undefined;
   listFormat: (
     list: string[],
-    options: IntlListFormatOptions
+    options: Partial<IntlListFormatOptions>
   ) => string | undefined;
   numberFormat: (
     value: number,
-    options: NumberFormatOptions
+    options: Partial<NumberFormatOptions>
   ) => string | undefined;
   pluralRules: (
     value: number,
@@ -187,4 +184,47 @@ export interface RosettyReturn<T> {
       delimiter?: string;
     }
   ) => string;
+}
+
+export interface DisplayNamesOptions {
+  localeMatcher: 'lookup' | 'best fit';
+  style: 'narrow' | 'short' | 'long';
+  type:
+    | 'calendar'
+    | 'language'
+    | 'region'
+    | 'script'
+    | 'currency'
+    | 'dateTimeField';
+  fallback: 'code' | 'none';
+}
+
+export interface IntlListFormatOptions {
+  localeMatcher: 'lookup' | 'best fit';
+  style: 'narrow' | 'short' | 'long';
+  type: 'conjunction' | 'disjunction' | 'unit';
+}
+
+export interface NumberFormatOptions {
+  compactDisplay: 'short' | 'long';
+  currency: string;
+  currencyDisplay: 'symbol' | 'code' | 'name' | 'narrowSymbol';
+  currencySign: 'standard' | 'accounting';
+  localeMatcher: 'lookup' | 'best fit';
+  notation: 'standard' | 'scientific' | 'engineering' | 'compact';
+  numberingSystem: string;
+  signDisplay: 'auto' | 'always' | 'never' | 'negative' | 'exceptZero';
+  style: 'decimal' | 'percent' | 'currency';
+  unit: string;
+  unitDisplay: 'long' | 'short' | 'narrow';
+  useGrouping: 'always' | 'auto' | 'false' | 'true' | 'min2';
+  roundingMode: 'ceil' | 'floor' | 'expand' | 'trunc';
+  roundingPriority: 'auto' | 'morePrecision' | 'lessPrecision';
+  roundingIncrement: number;
+  trailingZeroDisplay: 'auto' | 'stripIfInteger' | 'lessPrecision';
+  minimumIntegerDigits: number;
+  minimumFractionDigits: number;
+  maximumFractionDigits: number;
+  minimumSignificantDigits: number;
+  maximumSignificantDigits: number;
 }

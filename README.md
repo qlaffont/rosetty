@@ -63,15 +63,70 @@ Return: Record<string, Locale>
 
 Return Date-fns locale files. <https://date-fns.org/v2.28.0/docs/Locale>
 
-### loadNodePolyfill(languages)
+### WARNING FOR NODE JS ENVIRONMENT
 
-**Options**
+**You need to load polyfill on node environment because Intl API is not present. Please use below code to make it works.**
 
-| Field Name | Type     | Description                               |
-| ---------- | -------- | ----------------------------------------- |
-| languages  | string[] | Specify all languages from rosetty config |
+```js
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-empty */
 
-Will load polyfill for nodejs if needed.
+export const loadPolyfill = () => {
+  //@ts-ignore
+  if (!Intl?.DisplayNames) {
+    require(`@formatjs/intl-displaynames/polyfill`);
+  }
+  //@ts-ignore
+  if (!Intl?.ListFormat) {
+    require(`@formatjs/intl-listformat/polyfill-force`);
+  }
+  //@ts-ignore
+  if (!Intl?.NumberFormat) {
+    require(`@formatjs/intl-numberformat/polyfill`);
+  }
+  //@ts-ignore
+  if (!Intl?.PluralRules) {
+    require(`@formatjs/intl-pluralrules/polyfill`);
+  }
+};
+
+export const loadPolyfillData = (lang: string) => {
+  //Load Lang polyfill
+  try {
+    require(`@formatjs/intl-displaynames/locale-data/${lang}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-listformat/locale-data/${lang}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-numberformat/locale-data/${lang}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-pluralrules/locale-data/${lang}`);
+  } catch (error) {}
+
+  //Load Lang polyfill fallback
+  try {
+    require(`@formatjs/intl-displaynames/locale-data/${lang.split('-')[0]}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-listformat/locale-data/${lang.split('-')[0]}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-numberformat/locale-data/${lang.split('-')[0]}`);
+  } catch (error) {}
+
+  try {
+    require(`@formatjs/intl-pluralrules/locale-data/${lang.split('-')[0]}`);
+  } catch (error) {}
+};
+
+```
 
 ## Maintain
 

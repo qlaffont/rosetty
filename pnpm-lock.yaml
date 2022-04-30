@@ -6,11 +6,6 @@ overrides:
   typescript: 4.6.4
 
 specifiers:
-  '@formatjs/ecma402-abstract': ^1.11.4
-  '@formatjs/intl-displaynames': ^5.4.3
-  '@formatjs/intl-listformat': ^6.5.3
-  '@formatjs/intl-numberformat': ^7.4.3
-  '@formatjs/intl-pluralrules': ^4.3.3
   '@size-limit/preset-small-lib': 7.0.8
   '@typescript-eslint/eslint-plugin': 5.21.0
   '@typescript-eslint/parser': 5.21.0
@@ -30,11 +25,6 @@ specifiers:
   typescript: 4.6.4
 
 dependencies:
-  '@formatjs/ecma402-abstract': 1.11.4
-  '@formatjs/intl-displaynames': 5.4.3
-  '@formatjs/intl-listformat': 6.5.3
-  '@formatjs/intl-numberformat': 7.4.3
-  '@formatjs/intl-pluralrules': 4.3.3
   date-fns: 2.28.0
   rosetta: 1.1.0
 
@@ -1262,51 +1252,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@formatjs/ecma402-abstract/1.11.4:
-    resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
-    dependencies:
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.4.0
-    dev: false
-
-  /@formatjs/intl-displaynames/5.4.3:
-    resolution: {integrity: sha512-4r12A3mS5dp5hnSaQCWBuBNfi9Amgx2dzhU4lTFfhSxgb5DOAiAbMpg6+7gpWZgl4ahsj3l2r/iHIjdmdXOE2Q==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.4.0
-    dev: false
-
-  /@formatjs/intl-listformat/6.5.3:
-    resolution: {integrity: sha512-ozpz515F/+3CU+HnLi5DYPsLa6JoCfBggBSSg/8nOB5LYSFW9+ZgNQJxJ8tdhKYeODT+4qVHX27EeJLoxLGLNg==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.4.0
-    dev: false
-
-  /@formatjs/intl-localematcher/0.2.25:
-    resolution: {integrity: sha512-YmLcX70BxoSopLFdLr1Ds99NdlTI2oWoLbaUW2M406lxOIPzE1KQhRz2fPUkq34xVZQaihCoU29h0KK7An3bhA==}
-    dependencies:
-      tslib: 2.4.0
-    dev: false
-
-  /@formatjs/intl-numberformat/7.4.3:
-    resolution: {integrity: sha512-oxhLCw00YO7brwMPqGD+ui5gdeWoMiRhqsRSqwsDSRd03aJ/N3/VZQDoxGIn3IM9bhlPM5W0ckXiXuOMFLszjw==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.4.0
-    dev: false
-
-  /@formatjs/intl-pluralrules/4.3.3:
-    resolution: {integrity: sha512-NLZN8gf2qLpCuc0m565IbKLNUarEGOzk0mkdTkE4XTuNCofzoQTurW6lL3fmDlneAoYl2FiTdHa5q4o2vZF50g==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.4.0
-    dev: false
 
   /@humanwhocodes/config-array/0.9.5:
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
@@ -8340,6 +8285,7 @@ packages:
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: true
 
   /tsutils/3.21.0_typescript@4.6.4:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}

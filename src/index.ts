@@ -90,6 +90,8 @@ export const rosetty = <T>(
         : undefined,
     //Intl Polyfill
     displayNames: (langCode: string, options: Partial<DisplayNamesOptions>) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       return new Intl.DisplayNames(
         [actualConfig?.locale.code as string],
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -135,7 +135,7 @@ export interface Language {
   locale: Locale;
 }
 
-export interface RosettyReturn<T> {
+export interface RosettyReturn<T extends AnyObject> {
   changeLang: (lang: string) => void;
   languages: string[];
   getCurrentLang: () => string | undefined;
@@ -245,7 +245,7 @@ export interface NumberFormatOptions {
 
 export const locales: Locales = dateFNSLocaleFiles;
 
-export const rosetty = <T>(
+export const rosetty = <T extends AnyObject>(
   initialConfig: Record<string, Language>,
   defaultLang?: string
 ): RosettyReturn<T> => {

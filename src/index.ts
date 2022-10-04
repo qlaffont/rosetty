@@ -247,7 +247,8 @@ export const locales: Locales = dateFNSLocaleFiles;
 
 export const rosetty = <T extends AnyObject>(
   initialConfig: Record<string, Language>,
-  defaultLang?: string
+  defaultLang?: string,
+  translateFallback?: boolean
 ): RosettyReturn<T> => {
   let config: Record<string, Language> = initialConfig;
   let actualConfig: Language | undefined;
@@ -304,8 +305,10 @@ export const rosetty = <T extends AnyObject>(
     //@ts-ignore
     t: (key: ObjectPath<T>, params?: Record<string, any>) =>
       actualLang
-        ? rosettaInstance.t(key as unknown as string, params)
-        : undefined,
+        ? rosettaInstance.t(key as unknown as string, params) ||
+          (translateFallback ? key : undefined)
+        : // eslint-disable-next-line prettier/prettier
+        (translateFallback ? key : undefined),
     //Intl Polyfill
     displayNames: (langCode: string, options: Partial<DisplayNamesOptions>) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

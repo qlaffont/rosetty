@@ -7,6 +7,7 @@ import {
   formatRelative,
   subDays,
 } from 'date-fns';
+import { it, describe, expect } from '@jest/globals';
 
 import { locales, rosetty } from '../src';
 
@@ -142,6 +143,25 @@ describe('rosetty', () => {
       );
 
       expect(r.t('test')).toEqual('This is a test');
+    });
+
+    it('should be able to return fallback', () => {
+      const { enGB: enLocale } = locales;
+      const r = rosetty<{ test: 'toto' }>(
+        {
+          en: {
+            dict: {
+              test: 'This is a test',
+            },
+            locale: enLocale,
+          },
+        },
+        'en',
+        true
+      );
+
+      //@ts-ignore
+      expect(r.t('tuto.tyrt')).toEqual('tuto.tyrt');
     });
 
     it('should return translated text with data', () => {

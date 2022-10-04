@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { describe, expect, it } from '@jest/globals';
 import {
   format,
   formatDistance,
@@ -7,7 +8,6 @@ import {
   formatRelative,
   subDays,
 } from 'date-fns';
-import { it, describe, expect } from '@jest/globals';
 
 import { locales, rosetty } from '../src';
 

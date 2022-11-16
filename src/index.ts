@@ -228,7 +228,7 @@ export interface NumberFormatOptions {
   notation: 'standard' | 'scientific' | 'engineering' | 'compact';
   numberingSystem: string;
   signDisplay: 'auto' | 'always' | 'never' | 'negative' | 'exceptZero';
-  style: 'decimal' | 'percent' | 'currency';
+  style: 'decimal' | 'percent' | 'currency' | 'unit';
   unit: string;
   unitDisplay: 'long' | 'short' | 'narrow';
   useGrouping: 'always' | 'auto' | 'false' | 'true' | 'min2';

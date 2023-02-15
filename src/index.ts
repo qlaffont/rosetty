@@ -12,30 +12,19 @@ import { Locale } from 'date-fns';
 import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyObject = Record<string, any>;
+type BreakDownObject<O, R = void> = {
+  [K in keyof O as string]: K extends string
+    ? R extends string
+      ? ObjectDotNotation<O[K], `${R}.${K}`>
+      : ObjectDotNotation<O[K], K>
+    : never;
+};
 
-//@ts-ignore
-type NewType<A extends string, B extends string> = `${A}.${B}`;
-
-type DotJoin<A extends string, B extends string> = A extends ''
-  ? B
-  : NewType<A, B>;
-
-type DeepKeys<O extends AnyObject> = {
-  [K in keyof O]: O[K] extends AnyObject ? K : never;
-}[keyof O];
-
-type ObjectPath<
-  O extends AnyObject,
-  P extends string = '',
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  K extends string = keyof O
-> = K extends DeepKeys<O>
-  ? ObjectPath<O[K], DotJoin<P, K>>
-  : /*************/ DotJoin<P, K>;
-
+export type ObjectDotNotation<O, R = void> = O extends string
+  ? R extends string
+    ? R
+    : never
+  : BreakDownObject<O, R>[keyof BreakDownObject<O, R>];
 export interface Locales {
   af: Locale;
   ar: Locale;
@@ -135,11 +124,14 @@ export interface Language {
   locale: Locale;
 }
 
-export interface RosettyReturn<T extends AnyObject> {
+export interface RosettyReturn<T> {
   changeLang: (lang: string) => void;
   languages: string[];
   getCurrentLang: () => string | undefined;
-  t: (key: ObjectPath<T>, params?: Record<string, any>) => string | undefined;
+  t: (
+    key: ObjectDotNotation<T>,
+    params?: Record<string, any>
+  ) => string | undefined;
   displayNames: (
     langCode: string,
     options: Partial<DisplayNamesOptions>
@@ -245,7 +237,7 @@ export interface NumberFormatOptions {
 
 export const locales: Locales = dateFNSLocaleFiles;
 
-export const rosetty = <T extends AnyObject>(
+export const rosetty = <T>(
   initialConfig: Record<string, Language>,
   defaultLang?: string,
   translateFallback?: boolean
@@ -301,9 +293,8 @@ export const rosetty = <T extends AnyObject>(
     languages: Object.keys(config),
     getCurrentLang: () => actualLang,
     //Rosetta
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    t: (key: ObjectPath<T>, params?: Record<string, any>) =>
+    t: (key: ObjectDotNotation<T>, params?: Record<string, any>) =>
       actualLang
         ? rosettaInstance.t(key as unknown as string, params) ||
           (translateFallback ? key : undefined)

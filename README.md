@@ -127,6 +127,10 @@ export const loadPolyfillData = (lang: string) => {
   } catch (error) {}
 };
 
+loadPolyfill();
+loadPolyfillData('fr');
+loadPolyfillData('en');
+
 ```
 
 ## Maintain

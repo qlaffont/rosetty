@@ -61,7 +61,7 @@
   },
 
   "resolutions": {
-    "typescript": "4.9.5"
+    "typescript": "5.0.3"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",

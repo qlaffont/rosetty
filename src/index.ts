@@ -59,7 +59,6 @@ export interface Locales {
   eu: Locale;
   faIR: Locale;
   fi: Locale;
-  fil: Locale;
   fr: Locale;
   frCA: Locale;
   frCH: Locale;

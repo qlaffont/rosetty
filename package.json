@@ -63,7 +63,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@jest/globals": "29.6.0",
+    "@jest/globals": "29.6.1",
     "@size-limit/preset-small-lib": "8.2.6",
     "@types/jest": "29.5.2",
     "@typescript-eslint/eslint-plugin": "5.61.0",

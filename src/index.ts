@@ -2,16 +2,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  format,
-  formatDistance,
-  formatDistanceToNow,
-  formatDuration,
-  formatRelative,
-} from 'date-fns';
-import { Locale } from 'date-fns';
-import * as dateFNSLocaleFiles from 'date-fns/locale';
 import rosetta from 'rosetta';
+import DAYJS from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import duration from 'dayjs/plugin/duration';
 
 type BreakDownObject<O, R = void> = {
   [K in keyof O as string]: K extends string
@@ -21,107 +16,20 @@ type BreakDownObject<O, R = void> = {
     : never;
 };
 
+const dayjs = DAYJS;
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
+dayjs.extend(localizedFormat);
+
 export type ObjectDotNotation<O, R = void> = O extends string
   ? R extends string
     ? R
     : never
   : BreakDownObject<O, R>[keyof BreakDownObject<O, R>];
-export interface Locales {
-  af: Locale;
-  ar: Locale;
-  arDZ: Locale;
-  arEG: Locale;
-  arMA: Locale;
-  arSA: Locale;
-  arTN: Locale;
-  az: Locale;
-  be: Locale;
-  bg: Locale;
-  bn: Locale;
-  bs: Locale;
-  ca: Locale;
-  cs: Locale;
-  cy: Locale;
-  da: Locale;
-  de: Locale;
-  deAT: Locale;
-  el: Locale;
-  enAU: Locale;
-  enCA: Locale;
-  enGB: Locale;
-  enIE: Locale;
-  enIN: Locale;
-  enNZ: Locale;
-  enUS: Locale;
-  enZA: Locale;
-  eo: Locale;
-  es: Locale;
-  et: Locale;
-  eu: Locale;
-  faIR: Locale;
-  fi: Locale;
-  fr: Locale;
-  frCA: Locale;
-  frCH: Locale;
-  fy: Locale;
-  gd: Locale;
-  gl: Locale;
-  gu: Locale;
-  he: Locale;
-  hi: Locale;
-  hr: Locale;
-  ht: Locale;
-  hu: Locale;
-  hy: Locale;
-  id: Locale;
-  is: Locale;
-  it: Locale;
-  ja: Locale;
-  jaHira: Locale;
-  ka: Locale;
-  kk: Locale;
-  km: Locale;
-  kn: Locale;
-  ko: Locale;
-  lb: Locale;
-  lt: Locale;
-  lv: Locale;
-  mk: Locale;
-  mn: Locale;
-  ms: Locale;
-  mt: Locale;
-  nb: Locale;
-  nl: Locale;
-  nlBE: Locale;
-  nn: Locale;
-  pl: Locale;
-  pt: Locale;
-  ptBR: Locale;
-  ro: Locale;
-  ru: Locale;
-  sk: Locale;
-  sl: Locale;
-  sq: Locale;
-  sr: Locale;
-  srLatn: Locale;
-  sv: Locale;
-  ta: Locale;
-  te: Locale;
-  th: Locale;
-  tr: Locale;
-  ug: Locale;
-  uk: Locale;
-  uz: Locale;
-  uzCyrl: Locale;
-  vi: Locale;
-  zhCN: Locale;
-  zhHK: Locale;
-  zhTW: Locale;
-}
 
 export interface Language {
   dict: Record<string, unknown>;
-  locale: Locale;
+  locale: ILocale;
 }
 
 export interface RosettyReturn<T> {
@@ -153,42 +61,20 @@ export interface RosettyReturn<T> {
   format: (
     date: number | Date,
     stringFormat: string,
-    options?: {
-      weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-      firstWeekContainsDate?: number;
-      useAdditionalWeekYearTokens?: boolean;
-      useAdditionalDayOfYearTokens?: boolean;
-    }
   ) => string;
   formatRelative: (
     date: number | Date,
     baseDate: number | Date,
-    options?: {
-      weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-    }
   ) => string;
   formatDistance: (
     date: number | Date,
     baseDate: number | Date,
-    options?: {
-      includeSeconds?: boolean;
-      addSuffix?: boolean;
-    }
   ) => string;
   formatDistanceToNow: (
     date: number | Date,
-    options?: {
-      includeSeconds?: boolean;
-      addSuffix?: boolean;
-    }
   ) => string;
   formatDuration: (
-    duration: Duration,
-    options?: {
-      format?: string[];
-      zero?: boolean;
-      delimiter?: string;
-    }
+    duration: object,
   ) => string;
 }
 
@@ -235,7 +121,6 @@ export interface NumberFormatOptions {
   maximumSignificantDigits: number;
 }
 
-export const locales: Locales = dateFNSLocaleFiles;
 
 export const rosetty = <T>(
   initialConfig: Record<string, Language>,
@@ -305,7 +190,7 @@ export const rosetty = <T>(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       return new Intl.DisplayNames(
-        [actualConfig?.locale.code as string],
+        [actualConfig?.locale.name as string],
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         options
@@ -314,14 +199,14 @@ export const rosetty = <T>(
     listFormat: (list: string[], options: Partial<IntlListFormatOptions>) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      return new Intl.ListFormat(actualConfig?.locale.code, options).format(
+      return new Intl.ListFormat(actualConfig?.locale.name, options).format(
         list
       );
     },
     numberFormat: (value: number, options: Partial<NumberFormatOptions>) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      return new Intl.NumberFormat(actualConfig?.locale.code, options).format(
+      return new Intl.NumberFormat(actualConfig?.locale.name, options).format(
         value
       );
     },
@@ -331,7 +216,7 @@ export const rosetty = <T>(
         type: 'cardinal' | 'ordinal';
       }
     ) => {
-      return new Intl.PluralRules(actualConfig?.locale.code, options).select(
+      return new Intl.PluralRules(actualConfig?.locale.name, options).select(
         value
       );
     },
@@ -339,52 +224,28 @@ export const rosetty = <T>(
     format: (
       date: number | Date,
       stringFormat: string,
-      options: {
-        weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-        firstWeekContainsDate?: number;
-        useAdditionalWeekYearTokens?: boolean;
-        useAdditionalDayOfYearTokens?: boolean;
-      } = {}
+
     ) =>
-      format(date, stringFormat, { ...options, locale: actualConfig!.locale }),
+      dayjs(date).locale(actualConfig!.locale).format(stringFormat),
+      /**
+       * @deprecated Since version 2.0. Will be deleted in version 3.0. Use formatDistance instead.
+       */
     formatRelative: (
       date: number | Date,
-      baseDate: number | Date,
-      options: {
-        weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-      } = {}
+      baseDate: number | Date
     ) =>
-      formatRelative(date, baseDate, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
+      dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
     formatDistance: (
       date: number | Date,
-      baseDate: number | Date,
-      options: {
-        includeSeconds?: boolean;
-        addSuffix?: boolean;
-      } = {}
+      baseDate: number | Date
     ) =>
-      formatDistance(date, baseDate, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
+    dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
     formatDistanceToNow: (
       date: number | Date,
-      options: {
-        includeSeconds?: boolean;
-        addSuffix?: boolean;
-      } = {}
     ) =>
-      formatDistanceToNow(date, { ...options, locale: actualConfig!.locale }),
+    dayjs(date).locale(actualConfig!.locale).fromNow(true),
     formatDuration: (
-      duration: Duration,
-      options: {
-        format?: string[];
-        zero?: boolean;
-        delimiter?: string;
-      } = {}
-    ) => formatDuration(duration, { ...options, locale: actualConfig!.locale }),
+      duration: object,
+    ) => dayjs.duration(duration).locale(actualConfig!.locale.name).humanize(),
   };
 };

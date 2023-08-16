@@ -1,22 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, expect, it } from '@jest/globals';
-import {
-  format,
-  formatDistance,
-  formatDistanceToNow,
-  formatDuration,
-  formatRelative,
-  subDays,
-} from 'date-fns';
 
-import { locales, rosetty } from '../src';
+import { rosetty } from '../src';
+import enLocale from 'dayjs/locale/en-gb';
+import frLocale from 'dayjs/locale/fr';
+import dayjs from 'dayjs';
 
 describe('rosetty', () => {
   it('works', () => {
     expect(rosetty).toBeDefined();
   });
 
-  it('should return an error if no data is precise', () => {
     expect(() => {
       //@ts-ignore
       return rosetty();
@@ -27,7 +21,6 @@ describe('rosetty', () => {
 
   describe('getCurrentLang', () => {
     it('should return current lang', () => {
-      const { enGB: enLocale, fr: frLocale } = locales;
       const r = rosetty(
         {
           en: {
@@ -46,7 +39,7 @@ describe('rosetty', () => {
     });
 
     it('should return undefined if no lang is defined', () => {
-      const { enGB: enLocale, fr: frLocale } = locales;
+
       const r = rosetty({
         en: {
           dict: {},
@@ -64,7 +57,7 @@ describe('rosetty', () => {
 
   describe('languages', () => {
     it('should return only languages who is conform', () => {
-      const { enGB: enLocale } = locales;
+
       const r = rosetty({
         en: {
           dict: {},
@@ -82,7 +75,7 @@ describe('rosetty', () => {
 
   describe('changeLang', () => {
     it('should be able to change current lang', () => {
-      const { enGB: enLocale, fr: frLocale } = locales;
+
       const r = rosetty(
         {
           en: {
@@ -104,7 +97,7 @@ describe('rosetty', () => {
     });
 
     it("should throw an error if lang doesn't exist", () => {
-      const { enGB: enLocale, fr: frLocale } = locales;
+
       const r = rosetty(
         {
           en: {
@@ -129,7 +122,7 @@ describe('rosetty', () => {
 
   describe('t', () => {
     it('should return translated text', () => {
-      const { enGB: enLocale } = locales;
+
       const r = rosetty<{ test: 'toto' }>(
         {
           en: {
@@ -146,7 +139,7 @@ describe('rosetty', () => {
     });
 
     it('should be able to return fallback', () => {
-      const { enGB: enLocale } = locales;
+
       const r = rosetty<{ test: 'toto' }>(
         {
           en: {
@@ -165,7 +158,7 @@ describe('rosetty', () => {
     });
 
     it('should return translated text with data', () => {
-      const { enGB: enLocale } = locales;
+
       const r = rosetty<{ test: 'toto' }>(
         {
           en: {
@@ -186,7 +179,7 @@ describe('rosetty', () => {
     });
 
     it('should be able to allow autocomplete for ts', () => {
-      const { enGB: enLocale } = locales;
+
       const r = rosetty<{ test: ''; toto: { titi: '' } }>(
         {
           en: {
@@ -218,7 +211,7 @@ describe('rosetty', () => {
 
   describe('displayNames', () => {
     it('should return same value as Intl', () => {
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -237,7 +230,7 @@ describe('rosetty', () => {
 
   describe('listFormat', () => {
     it('should return same value as Intl', () => {
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -257,7 +250,7 @@ describe('rosetty', () => {
 
   describe('numberFormat', () => {
     it('should return same value as Intl', () => {
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -287,7 +280,7 @@ describe('rosetty', () => {
 
   describe('pluralRules', () => {
     it('should return same value as Intl', () => {
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -309,7 +302,7 @@ describe('rosetty', () => {
   describe('format', () => {
     it('should return same value as Date fns', () => {
       const dateToTest = new Date();
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -321,28 +314,7 @@ describe('rosetty', () => {
       );
 
       expect(r.format(dateToTest, 'yyyy-MM-dd')).toEqual(
-        format(dateToTest, 'yyyy-MM-dd', { locale: frLocale })
-      );
-    });
-  });
-
-  describe('formatRelative', () => {
-    it('should return same value as Date fns', () => {
-      const dateToTest = new Date();
-      const yesterdayDate = subDays(dateToTest, 1);
-      const { fr: frLocale } = locales;
-      const r = rosetty(
-        {
-          fr: {
-            dict: {},
-            locale: frLocale,
-          },
-        },
-        'fr'
-      );
-
-      expect(r.formatRelative(dateToTest, yesterdayDate)).toEqual(
-        formatRelative(dateToTest, yesterdayDate, { locale: frLocale })
+        dayjs(dateToTest).locale(frLocale).format('yyyy-MM-dd')
       );
     });
   });
@@ -350,8 +322,8 @@ describe('rosetty', () => {
   describe('formatDistance', () => {
     it('should return same value as Date fns', () => {
       const dateToTest = new Date();
-      const yesterdayDate = subDays(dateToTest, 1);
-      const { fr: frLocale } = locales;
+      const yesterdayDate = dayjs(dateToTest).subtract(1, 'day');
+
       const r = rosetty(
         {
           fr: {
@@ -362,16 +334,16 @@ describe('rosetty', () => {
         'fr'
       );
 
-      expect(r.formatDistance(dateToTest, yesterdayDate)).toEqual(
-        formatDistance(dateToTest, yesterdayDate, { locale: frLocale })
+      expect(r.formatDistance(dateToTest, yesterdayDate.toDate())).toEqual(
+        dayjs(dateToTest).locale(frLocale).from(dayjs(yesterdayDate), true)
       );
     });
   });
 
   describe('formatDistanceToNow', () => {
     it('should return same value as Date fns', () => {
-      const yesterdayDate = subDays(new Date(), 1);
-      const { fr: frLocale } = locales;
+      const yesterdayDate = dayjs().subtract(1, 'day');
+
       const r = rosetty(
         {
           fr: {
@@ -382,8 +354,8 @@ describe('rosetty', () => {
         'fr'
       );
 
-      expect(r.formatDistanceToNow(yesterdayDate)).toEqual(
-        formatDistanceToNow(yesterdayDate, { locale: frLocale })
+      expect(r.formatDistanceToNow(yesterdayDate.toDate())).toEqual(
+        dayjs(yesterdayDate).locale(frLocale).fromNow(true)
       );
     });
   });
@@ -400,7 +372,7 @@ describe('rosetty', () => {
         seconds: 30,
       };
 
-      const { fr: frLocale } = locales;
+
       const r = rosetty(
         {
           fr: {
@@ -412,8 +384,7 @@ describe('rosetty', () => {
       );
 
       expect(r.formatDuration(duration)).toEqual(
-        formatDuration(duration, { locale: frLocale })
+        dayjs.duration(duration).locale(frLocale.name).humanize()
       );
     });
   });
-});

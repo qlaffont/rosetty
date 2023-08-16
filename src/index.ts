@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import rosetta from 'rosetta';
 import DAYJS from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 import duration from 'dayjs/plugin/duration';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import rosetta from 'rosetta';
 
 type BreakDownObject<O, R = void> = {
   [K in keyof O as string]: K extends string
@@ -58,24 +58,11 @@ export interface RosettyReturn<T> {
       type: 'cardinal' | 'ordinal';
     }
   ) => string | undefined;
-  format: (
-    date: number | Date,
-    stringFormat: string,
-  ) => string;
-  formatRelative: (
-    date: number | Date,
-    baseDate: number | Date,
-  ) => string;
-  formatDistance: (
-    date: number | Date,
-    baseDate: number | Date,
-  ) => string;
-  formatDistanceToNow: (
-    date: number | Date,
-  ) => string;
-  formatDuration: (
-    duration: object,
-  ) => string;
+  format: (date: number | Date, stringFormat: string) => string;
+  formatRelative: (date: number | Date, baseDate: number | Date) => string;
+  formatDistance: (date: number | Date, baseDate: number | Date) => string;
+  formatDistanceToNow: (date: number | Date) => string;
+  formatDuration: (duration: object) => string;
 }
 
 export interface DisplayNamesOptions {
@@ -120,7 +107,6 @@ export interface NumberFormatOptions {
   minimumSignificantDigits: number;
   maximumSignificantDigits: number;
 }
-
 
 export const rosetty = <T>(
   initialConfig: Record<string, Language>,
@@ -221,31 +207,18 @@ export const rosetty = <T>(
       );
     },
     //Date FNS i18n
-    format: (
-      date: number | Date,
-      stringFormat: string,
-
-    ) =>
+    format: (date: number | Date, stringFormat: string) =>
       dayjs(date).locale(actualConfig!.locale).format(stringFormat),
-      /**
-       * @deprecated Since version 2.0. Will be deleted in version 3.0. Use formatDistance instead.
-       */
-    formatRelative: (
-      date: number | Date,
-      baseDate: number | Date
-    ) =>
+    /**
+     * @deprecated Since version 2.0. Will be deleted in version 3.0. Use formatDistance instead.
+     */
+    formatRelative: (date: number | Date, baseDate: number | Date) =>
       dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
-    formatDistance: (
-      date: number | Date,
-      baseDate: number | Date
-    ) =>
-    dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
-    formatDistanceToNow: (
-      date: number | Date,
-    ) =>
-    dayjs(date).locale(actualConfig!.locale).fromNow(true),
-    formatDuration: (
-      duration: object,
-    ) => dayjs.duration(duration).locale(actualConfig!.locale.name).humanize(),
+    formatDistance: (date: number | Date, baseDate: number | Date) =>
+      dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
+    formatDistanceToNow: (date: number | Date) =>
+      dayjs(date).locale(actualConfig!.locale).fromNow(true),
+    formatDuration: (duration: object) =>
+      dayjs.duration(duration).locale(actualConfig!.locale.name).humanize(),
   };
 };

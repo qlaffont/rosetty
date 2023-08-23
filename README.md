@@ -37,7 +37,7 @@ console.log(r.t('test')); // This is a test
 | ----------- | ------------------------ | -------------------------------------------------------------- |
 | config      | Record<string, Language> | Specify dictionnary and locale to use for each lang            |
 | defaultLang | string?                  | Specify default language to use (should be the same as config) |
-| defaultLang | boolean?                 | Return fallback if translation is not defined                  |
+| translateFallback | boolean?                 | Return fallback if translation is not defined                  |
 
 **Return**
 

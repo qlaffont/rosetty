@@ -60,7 +60,7 @@
     "testEnvironment": "jsdom"
   },
   "resolutions": {
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "devDependencies": {
     "@jest/globals": "29.6.4",
@@ -81,7 +81,7 @@
     "ts-jest": "^29.1.0",
     "tsdx": "0.14.1",
     "tslib": "2.6.2",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "dayjs": "^1.11.9",

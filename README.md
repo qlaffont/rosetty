@@ -1,10 +1,10 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/1ff0c28615640d86e758/maintainability)](https://codeclimate.com/github/flexper/rosetty/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/1ff0c28615640d86e758/test_coverage)](https://codeclimate.com/github/flexper/rosetty/test_coverage) ![npm](https://img.shields.io/npm/v/rosetty) ![npm](https://img.shields.io/npm/dm/rosetty) ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/rosetty) ![NPM](https://img.shields.io/npm/l/rosetty)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1ff0c28615640d86e758/maintainability)](https://codeclimate.com/github/qlaffont/rosetty/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/1ff0c28615640d86e758/test_coverage)](https://codeclimate.com/github/qlaffont/rosetty/test_coverage) ![npm](https://img.shields.io/npm/v/rosetty) ![npm](https://img.shields.io/npm/dm/rosetty) ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/rosetty) ![NPM](https://img.shields.io/npm/l/rosetty)
 
 # Rosetty
 
-Complete Intl/I18n solution for browser and node
+Complete Intl/I18n solution for browser and node. Old Owner: [@flexper](https://github.com/flexper)
 
-- React Implementation : [Rosetty React](https://github.com/flexper/rosetty-react)
+- React Implementation : [Rosetty React](https://github.com/qlaffont/rosetty-react)
 
 ## Usage
 

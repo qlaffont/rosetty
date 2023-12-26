@@ -1,7 +1,7 @@
 {
   "version": "2.0.9",
   "license": "MIT",
-  "main": "./dist/index.cjs",
+  "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
@@ -19,9 +19,11 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "tsup src/index.ts",
+    "start": "tsdx watch",
+    "build": "tsdx build",
     "test": "jest",
     "lint": "eslint src test",
+    "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
@@ -38,7 +40,7 @@
   },
   "name": "rosetty",
   "author": "Qlaffont",
-  "module": "./dist/index.js",
+  "module": "dist/rosetty.esm.js",
   "size-limit": [
     {
       "path": "dist/rosetty.cjs.production.min.js",
@@ -79,26 +81,10 @@
     "ts-jest": "^29.1.0",
     "tsdx": "0.14.1",
     "tslib": "2.6.2",
-    "tsup": "^8.0.1",
-    "tsup-preset-solid": "^2.2.0",
     "typescript": "5.2.2"
   },
   "dependencies": {
     "dayjs": "^1.11.9",
     "rosetta": "^1.1.0"
-  },
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "import": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "require": {
-      "types": "./dist/index.d.cts",
-      "default": "./dist/index.cjs"
-    }
-  },
-  "browser": {},
-  "typesVersions": {},
-  "type": "module"
+  }
 }

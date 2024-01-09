@@ -36,9 +36,10 @@ export interface RosettyReturn<T> {
   changeLang: (lang: string) => void;
   languages: string[];
   getCurrentLang: () => string | undefined;
-  t: (
-    key: ObjectDotNotation<T>,
-    params?: Record<string, any>
+  t: <R>(
+    key: keyof R extends keyof T ? ObjectDotNotation<T> : ObjectDotNotation<R>,
+    params?: Record<string, any>,
+    dict?: Record<string, R>
   ) => string | undefined;
   displayNames: (
     langCode: string,
@@ -165,12 +166,25 @@ export const rosetty = <T>(
     getCurrentLang: () => actualLang,
     //Rosetta
     //@ts-ignore
-    t: (key: ObjectDotNotation<T>, params?: Record<string, any>) =>
-      actualLang
-        ? rosettaInstance.t(key as unknown as string, params) ||
-          (translateFallback ? key : undefined)
-        : // eslint-disable-next-line prettier/prettier
-        (translateFallback ? key : undefined),
+    t: <R>(key, params?: Record<string, any>, dict?: Record<string, R>) => {
+      if (actualLang) {
+        if (dict) {
+          const r = rosetta(dict);
+          r.locale(actualLang);
+          return (
+            r.t(key as unknown as string, params) ||
+            (translateFallback ? key : undefined)
+          );
+        } else {
+          return (
+            rosettaInstance.t(key as unknown as string, params) ||
+            (translateFallback ? key : undefined)
+          );
+        }
+      } else {
+        return translateFallback ? key : undefined;
+      }
+    },
     //Intl Polyfill
     displayNames: (langCode: string, options: Partial<DisplayNamesOptions>) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

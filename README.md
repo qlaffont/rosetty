@@ -33,10 +33,10 @@ console.log(r.t('test')); // This is a test
 
 **Options**
 
-| Field Name  | Type                     | Description                                                    |
-| ----------- | ------------------------ | -------------------------------------------------------------- |
-| config      | Record<string, Language> | Specify dictionnary and locale to use for each lang            |
-| defaultLang | string?                  | Specify default language to use (should be the same as config) |
+| Field Name        | Type                     | Description                                                    |
+| ----------------- | ------------------------ | -------------------------------------------------------------- |
+| config            | Record<string, Language> | Specify dictionnary and locale to use for each lang            |
+| defaultLang       | string?                  | Specify default language to use (should be the same as config) |
 | translateFallback | boolean?                 | Return fallback if translation is not defined                  |
 
 **Return**
@@ -46,7 +46,7 @@ console.log(r.t('test')); // This is a test
 | changeLang          | (newLang: string) => void                                                                                                        | Change current lang                                                                                                                                                                   |
 | languages           | string[]                                                                                                                         | List of languages who can be selected                                                                                                                                                 |
 | getCurrentLang      | () => string                                                                                                                     | Return current lang                                                                                                                                                                   |
-| t                   | (key: string, params?: Record<string, any>) => string OR undefined                                                               | Return translated text <https://github.com/lukeed/rosetta#rosettatkey-params-lang>                                                                                                    |
+| t                   | (key: string, params?: Record<string, any>, dict?: Record<string, any>) => string OR undefined                                   | Return translated text <https://github.com/lukeed/rosetta#rosettatkey-params-lang>. If dict is defined, he will use dict.                                                             |
 | displayNames        | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/DisplayNames) | Consistent translation of language, region and script display names <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/DisplayNames> |
 | listFormat          | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat)     | Language-sensitive list formatting <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat>                                      |
 | numberFormat        | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) | Language-sensitive list formatting <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat>                                  |

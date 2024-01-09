@@ -131,6 +131,24 @@ describe('t', () => {
     expect(r.t('test')).toEqual('This is a test');
   });
 
+  it('should return translated text from custom dict', () => {
+    const r = rosetty<{ test: 'toto' }>(
+      {
+        en: {
+          dict: {
+            test: 'This is a test',
+          },
+          locale: enLocale,
+        },
+      },
+      'en'
+    );
+
+    expect(r.t('toto', {}, { en: { toto: 'this is a test' } })).toEqual(
+      'this is a test'
+    );
+  });
+
   it('should be able to return fallback', () => {
     const r = rosetty<{ test: 'toto' }>(
       {

@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, expect, it } from '@jest/globals';
-import dayjs from 'dayjs';
-import enLocale from 'dayjs/locale/en-gb';
-import frLocale from 'dayjs/locale/fr';
+import {
+  format,
+  formatDistance,
+  formatDistanceToNow,
+  formatDuration,
+  formatRelative,
+  subDays,
+} from 'date-fns';
+import { enGB as enLocale, fr as frLocale } from 'date-fns/locale';
 
 import { rosetty } from '../src';
 
@@ -318,7 +324,27 @@ describe('format', () => {
     );
 
     expect(r.format(dateToTest, 'yyyy-MM-dd')).toEqual(
-      dayjs(dateToTest).locale(frLocale).format('yyyy-MM-dd')
+      format(dateToTest, 'yyyy-MM-dd', { locale: frLocale })
+    );
+  });
+});
+
+describe('formatRelative', () => {
+  it('should return same value as Date fns', () => {
+    const dateToTest = new Date();
+    const yesterdayDate = subDays(dateToTest, 1);
+    const r = rosetty(
+      {
+        fr: {
+          dict: {},
+          locale: frLocale,
+        },
+      },
+      'fr'
+    );
+
+    expect(r.formatRelative(dateToTest, yesterdayDate)).toEqual(
+      formatRelative(dateToTest, yesterdayDate, { locale: frLocale })
     );
   });
 });
@@ -326,7 +352,7 @@ describe('format', () => {
 describe('formatDistance', () => {
   it('should return same value as Date fns', () => {
     const dateToTest = new Date();
-    const yesterdayDate = dayjs(dateToTest).subtract(1, 'day');
+    const yesterdayDate = subDays(new Date(), 1);
 
     const r = rosetty(
       {
@@ -338,15 +364,15 @@ describe('formatDistance', () => {
       'fr'
     );
 
-    expect(r.formatDistance(dateToTest, yesterdayDate.toDate())).toEqual(
-      dayjs(dateToTest).locale(frLocale).from(dayjs(yesterdayDate), true)
+    expect(r.formatDistance(dateToTest, yesterdayDate)).toEqual(
+      formatDistance(dateToTest, yesterdayDate, { locale: frLocale })
     );
   });
 });
 
 describe('formatDistanceToNow', () => {
   it('should return same value as Date fns', () => {
-    const yesterdayDate = dayjs().subtract(1, 'day');
+    const yesterdayDate = subDays(new Date(), 1);
 
     const r = rosetty(
       {
@@ -358,8 +384,8 @@ describe('formatDistanceToNow', () => {
       'fr'
     );
 
-    expect(r.formatDistanceToNow(yesterdayDate.toDate())).toEqual(
-      dayjs(yesterdayDate).locale(frLocale).fromNow(true)
+    expect(r.formatDistanceToNow(yesterdayDate)).toEqual(
+      formatDistanceToNow(yesterdayDate, { locale: frLocale })
     );
   });
 });
@@ -387,7 +413,7 @@ describe('formatDuration', () => {
     );
 
     expect(r.formatDuration(duration)).toEqual(
-      dayjs.duration(duration).locale(frLocale.name).humanize()
+      formatDuration(duration, { locale: frLocale })
     );
   });
 });

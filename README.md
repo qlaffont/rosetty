@@ -10,7 +10,7 @@ Complete Intl/I18n solution for browser and node. Old Owner: [@flexper](https://
 
 ```js
 const { rosetty } = require('rosetty');
-const enGB = require('dayjs/locale/en-gb');
+const { enGB } = require('date-fns/locale');
 
 const r = rosetty(
   {
@@ -18,7 +18,7 @@ const r = rosetty(
       dict: {
         test: 'This is a test',
       },
-      locale: enLocale,
+      locale: enGB,
     },
   },
   'en'
@@ -51,17 +51,18 @@ console.log(r.t('test')); // This is a test
 | listFormat          | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat)     | Language-sensitive list formatting <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat>                                      |
 | numberFormat        | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) | Language-sensitive list formatting <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat>                                  |
 | pluralRules         | [Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules/PluralRules)   | Plural-sensitive formatting and plural-related language rules <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules/PluralRules>         |
-| format              | [Documentation](https://day.js.org/docs/en/display/format)                                                                       | Return the formatted date string in the given format                                                                                                                                  |
-| formatDistance      | [Documentation](https://day.js.org/docs/en/display/from)                                                                         | Return the distance between the given dates in words.                                                                                                                                 |
-| formatDistanceToNow | [Documentation](https://day.js.org/docs/en/display/from-now)                                                                     | Return the distance between the given date and now in words.                                                                                                                          |
-| formatDuration      | [Documentation](https://day.js.org/docs/en/durations/humanize)                                                                   | Return human-readable duration string i.e. "9 months 2 days"                                                                                                                          |
+| format              | [Documentation](https://date-fns.org/v3.3.0/docs/format)                                                                        | Return the formatted date string in the given format <https://date-fns.org/v3.3.0/docs/format>                                                                                       |
+| formatRelative      | [Documentation](https://date-fns.org/v3.3.0/docs/formatRelative)                                                                | Represent the date in words relative to the given base date. <https://date-fns.org/v3.3.0/docs/formatRelative>                                                                       |
+| formatDistance      | [Documentation](https://date-fns.org/v3.3.0/docs/formatDistance)                                                                | Return the distance between the given dates in words. <https://date-fns.org/v3.3.0/docs/formatDistance>                                                                              |
+| formatDistanceToNow | [Documentation](https://date-fns.org/v3.3.0/docs/formatDistanceToNow)                                                           | Return the distance between the given date and now in words. <https://date-fns.org/v3.3.0/docs/formatDistanceToNow>                                                                  |
+| formatDuration      | [Documentation](https://date-fns.org/v3.3.0/docs/formatDuration)                                                                | Return human-readable duration string i.e. "9 months 2 days" <https://date-fns.org/v3.3.0/docs/formatDuration>                                                                       |  |
 
 ### WARNING FOR LOCALE !
 
-**You need to import locale from `dayjs` package.**
+**You need to import locale from `date-fns` package.**
 
 ```js
-const enGB = require('dayjs/locale/en-gb');
+const { enGB } = require('date-fns/locale');
 ```
 
 ## Maintain

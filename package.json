@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "./dist/index.cjs",
   "typings": "dist/index.d.ts",
@@ -84,7 +84,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "dayjs": "^1.11.9",
+    "date-fns": "^3.3.0",
     "rosetta": "^1.1.0"
   },
   "types": "./dist/index.d.ts",

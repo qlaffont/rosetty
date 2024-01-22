@@ -2,10 +2,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import DAYJS from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import type { Locale } from 'date-fns';
+import {
+  format,
+  formatDistance,
+  formatDistanceToNow,
+  formatDuration,
+  formatRelative,
+} from 'date-fns';
 import rosetta from 'rosetta';
 
 type BreakDownObject<O, R = void> = {
@@ -16,11 +20,6 @@ type BreakDownObject<O, R = void> = {
     : never;
 };
 
-const dayjs = DAYJS;
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-dayjs.extend(localizedFormat);
-
 export type ObjectDotNotation<O, R = void> = O extends string
   ? R extends string
     ? R
@@ -29,7 +28,7 @@ export type ObjectDotNotation<O, R = void> = O extends string
 
 export interface Language {
   dict: Record<string, unknown>;
-  locale: ILocale;
+  locale: Locale;
 }
 
 export interface RosettyReturn<T> {
@@ -43,70 +42,43 @@ export interface RosettyReturn<T> {
   ) => string | undefined;
   displayNames: (
     langCode: string,
-    options: Partial<DisplayNamesOptions>
+    options: Intl.DisplayNamesOptions
   ) => string | undefined;
   listFormat: (
     list: string[],
-    options: Partial<IntlListFormatOptions>
+    options: Intl.ListFormatOptions
   ) => string | undefined;
   numberFormat: (
     value: number,
-    options: Partial<NumberFormatOptions>
+    options: Intl.NumberFormatOptions
   ) => string | undefined;
   pluralRules: (
     value: number,
-    options: {
-      type: 'cardinal' | 'ordinal';
-    }
+    options: Intl.PluralRulesOptions
   ) => string | undefined;
-  format: (date: number | Date, stringFormat: string) => string;
-  formatRelative: (date: number | Date, baseDate: number | Date) => string;
-  formatDistance: (date: number | Date, baseDate: number | Date) => string;
-  formatDistanceToNow: (date: number | Date) => string;
-  formatDuration: (duration: object) => string;
-}
-
-export interface DisplayNamesOptions {
-  localeMatcher: 'lookup' | 'best fit';
-  style: 'narrow' | 'short' | 'long';
-  type:
-    | 'calendar'
-    | 'language'
-    | 'region'
-    | 'script'
-    | 'currency'
-    | 'dateTimeField';
-  fallback: 'code' | 'none';
-}
-
-export interface IntlListFormatOptions {
-  localeMatcher: 'lookup' | 'best fit';
-  style: 'narrow' | 'short' | 'long';
-  type: 'conjunction' | 'disjunction' | 'unit';
-}
-
-export interface NumberFormatOptions {
-  compactDisplay: 'short' | 'long';
-  currency: string;
-  currencyDisplay: 'symbol' | 'code' | 'name' | 'narrowSymbol';
-  currencySign: 'standard' | 'accounting';
-  localeMatcher: 'lookup' | 'best fit';
-  notation: 'standard' | 'scientific' | 'engineering' | 'compact';
-  numberingSystem: string;
-  signDisplay: 'auto' | 'always' | 'never' | 'negative' | 'exceptZero';
-  style: 'decimal' | 'percent' | 'currency' | 'unit';
-  unit: string;
-  unitDisplay: 'long' | 'short' | 'narrow';
-  useGrouping: 'always' | 'auto' | 'false' | 'true' | 'min2';
-  roundingMode: 'ceil' | 'floor' | 'expand' | 'trunc';
-  roundingPriority: 'auto' | 'morePrecision' | 'lessPrecision';
-  roundingIncrement: number;
-  trailingZeroDisplay: 'auto' | 'stripIfInteger' | 'lessPrecision';
-  minimumIntegerDigits: number;
-  minimumFractionDigits: number;
-  maximumFractionDigits: number;
-  minimumSignificantDigits: number;
-  maximumSignificantDigits: number;
+  format: (
+    date: number | Date,
+    stringFormat: string,
+    options?: Parameters<typeof format>[2]
+  ) => string;
+  formatRelative: (
+    date: number | Date,
+    baseDate: number | Date,
+    options?: Parameters<typeof formatRelative>[2]
+  ) => string;
+  formatDistance: (
+    date: number | Date,
+    baseDate: number | Date,
+    options?: Parameters<typeof formatDistance>[2]
+  ) => string;
+  formatDistanceToNow: (
+    date: number | Date,
+    options?: Parameters<typeof formatDistanceToNow>[1]
+  ) => string;
+  formatDuration: (
+    duration: object,
+    options?: Parameters<typeof formatDuration>[1]
+  ) => string;
 }
 
 export const rosetty = <T>(
@@ -186,53 +158,60 @@ export const rosetty = <T>(
       }
     },
     //Intl Polyfill
-    displayNames: (langCode: string, options: Partial<DisplayNamesOptions>) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
+    displayNames: (langCode: string, options: Intl.DisplayNamesOptions) => {
       return new Intl.DisplayNames(
-        [actualConfig?.locale.name as string],
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
+        [actualConfig?.locale.code as string],
         options
       ).of(langCode);
     },
-    listFormat: (list: string[], options: Partial<IntlListFormatOptions>) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      return new Intl.ListFormat(actualConfig?.locale.name, options).format(
+    listFormat: (list: string[], options: Intl.ListFormatOptions) => {
+      return new Intl.ListFormat(actualConfig?.locale.code, options).format(
         list
       );
     },
-    numberFormat: (value: number, options: Partial<NumberFormatOptions>) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      return new Intl.NumberFormat(actualConfig?.locale.name, options).format(
+    numberFormat: (value: number, options: Intl.NumberFormatOptions) => {
+      return new Intl.NumberFormat(actualConfig?.locale.code, options).format(
         value
       );
     },
-    pluralRules: (
-      value: number,
-      options: {
-        type: 'cardinal' | 'ordinal';
-      }
-    ) => {
-      return new Intl.PluralRules(actualConfig?.locale.name, options).select(
+    pluralRules: (value: number, options: Intl.PluralRulesOptions) => {
+      return new Intl.PluralRules(actualConfig?.locale.code, options).select(
         value
       );
     },
     //Date FNS i18n
-    format: (date: number | Date, stringFormat: string) =>
-      dayjs(date).locale(actualConfig!.locale).format(stringFormat),
-    /**
-     * @deprecated Since version 2.0. Will be deleted in version 3.0. Use formatDistance instead.
-     */
-    formatRelative: (date: number | Date, baseDate: number | Date) =>
-      dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
-    formatDistance: (date: number | Date, baseDate: number | Date) =>
-      dayjs(date).locale(actualConfig!.locale).from(dayjs(baseDate), true),
-    formatDistanceToNow: (date: number | Date) =>
-      dayjs(date).locale(actualConfig!.locale).fromNow(true),
-    formatDuration: (duration: object) =>
-      dayjs.duration(duration).locale(actualConfig!.locale.name).humanize(),
+    format: (
+      date: number | Date,
+      stringFormat: string,
+      options?: Parameters<typeof format>[2]
+    ) =>
+      format(date, stringFormat, { ...options, locale: actualConfig!.locale }),
+    formatRelative: (
+      date: number | Date,
+      baseDate: number | Date,
+      options?: Parameters<typeof formatRelative>[2]
+    ) =>
+      formatRelative(date, baseDate, {
+        ...options,
+        locale: actualConfig!.locale,
+      }),
+    formatDistance: (
+      date: number | Date,
+      baseDate: number | Date,
+      options?: Parameters<typeof formatDistance>[2]
+    ) =>
+      formatDistance(date, baseDate, {
+        ...options,
+        locale: actualConfig!.locale,
+      }),
+    formatDistanceToNow: (
+      date: number | Date,
+      options?: Parameters<typeof formatDistanceToNow>[1]
+    ) =>
+      formatDistanceToNow(date, { ...options, locale: actualConfig!.locale }),
+    formatDuration: (
+      duration: object,
+      options?: Parameters<typeof formatDuration>[1]
+    ) => formatDuration(duration, { ...options, locale: actualConfig!.locale }),
   };
 };

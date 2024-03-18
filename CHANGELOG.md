@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.0.34 (2024-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns to v3.6.0 ([e49a484](https://github.com/qlaffont/rosetty/commit/e49a4843ef70fcee849564f3913efb5e478a1b93))
+
 ### 3.0.33 (2024-03-16)
 
 ### 3.0.32 (2024-03-16)

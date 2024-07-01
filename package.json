@@ -58,7 +58,7 @@
     "testEnvironment": "jsdom"
   },
   "resolutions": {
-    "typescript": "5.5.2"
+    "typescript": "5.5.3"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
@@ -81,7 +81,7 @@
     "tslib": "2.6.3",
     "tsup": "^8.0.1",
     "tsup-preset-solid": "^2.2.0",
-    "typescript": "5.5.2"
+    "typescript": "5.5.3"
   },
   "dependencies": {
     "date-fns": "^3.3.0",

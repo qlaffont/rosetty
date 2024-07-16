@@ -6,7 +6,9 @@ import type { Locale } from 'date-fns';
 import {
   format,
   formatDistance,
+  formatDistanceStrict,
   formatDistanceToNow,
+  formatDistanceToNowStrict,
   formatDuration,
   formatRelative,
 } from 'date-fns';
@@ -71,9 +73,18 @@ export interface RosettyReturn<T> {
     baseDate: number | Date,
     options?: Parameters<typeof formatDistance>[2]
   ) => string;
+  formatDistanceStrict: (
+    date: number | Date,
+    baseDate: number | Date,
+    options?: Parameters<typeof formatDistanceStrict>[2]
+  ) => string;
   formatDistanceToNow: (
     date: number | Date,
     options?: Parameters<typeof formatDistanceToNow>[1]
+  ) => string;
+  formatDistanceToNowStrict: (
+    date: number | Date,
+    options?: Parameters<typeof formatDistanceToNowStrict>[1]
   ) => string;
   formatDuration: (
     duration: object,
@@ -204,11 +215,28 @@ export const rosetty = <T>(
         ...options,
         locale: actualConfig!.locale,
       }),
+    formatDistanceStrict: (
+      date: number | Date,
+      baseDate: number | Date,
+      options?: Parameters<typeof formatDistanceStrict>[2]
+    ) =>
+      formatDistanceStrict(date, baseDate, {
+        ...options,
+        locale: actualConfig!.locale,
+      }),
     formatDistanceToNow: (
       date: number | Date,
       options?: Parameters<typeof formatDistanceToNow>[1]
     ) =>
       formatDistanceToNow(date, { ...options, locale: actualConfig!.locale }),
+    formatDistanceToNowStrict: (
+      date: number | Date,
+      options?: Parameters<typeof formatDistanceToNowStrict>[1]
+    ) =>
+      formatDistanceToNowStrict(date, {
+        ...options,
+        locale: actualConfig!.locale,
+      }),
     formatDuration: (
       duration: object,
       options?: Parameters<typeof formatDuration>[1]

@@ -70,7 +70,7 @@
     "typescript": "5.5.3"
   },
   "dependencies": {
-    "date-fns": "^3.3.0",
+    "date-fns": "^4.0.0",
     "rosetta": "^1.1.0"
   },
   "types": "./dist/index.d.ts",

@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, expect, it } from '@jest/globals';
-import {
-  format,
-  formatDistance,
-  formatDistanceToNow,
-  formatDuration,
-  formatRelative,
-  subDays,
-} from 'date-fns';
-import { enGB as enLocale, fr as frLocale } from 'date-fns/locale';
+import '@formatjs/intl-durationformat/polyfill';
 
 import { rosetty } from '../src';
 
@@ -29,11 +21,11 @@ describe('getCurrentLang', () => {
       {
         en: {
           dict: {},
-          locale: enLocale,
+          locale: 'en-GB',
         },
         fr: {
           dict: {},
-          locale: frLocale,
+          locale: 'fr',
         },
       },
       'en'
@@ -46,11 +38,11 @@ describe('getCurrentLang', () => {
     const r = rosetty({
       en: {
         dict: {},
-        locale: enLocale,
+        locale: 'en-GB',
       },
       fr: {
         dict: {},
-        locale: frLocale,
+        locale: 'fr',
       },
     });
 
@@ -63,7 +55,7 @@ describe('languages', () => {
     const r = rosetty({
       en: {
         dict: {},
-        locale: enLocale,
+        locale: 'en-GB',
       },
       //@ts-ignore
       fr: {
@@ -81,11 +73,11 @@ describe('changeLang', () => {
       {
         en: {
           dict: {},
-          locale: enLocale,
+          locale: 'en-GB',
         },
         fr: {
           dict: {},
-          locale: frLocale,
+          locale: 'fr',
         },
       },
       'en'
@@ -102,11 +94,11 @@ describe('changeLang', () => {
       {
         en: {
           dict: {},
-          locale: enLocale,
+          locale: 'en-GB',
         },
         fr: {
           dict: {},
-          locale: frLocale,
+          locale: 'fr',
         },
       },
       'en'
@@ -118,8 +110,6 @@ describe('changeLang', () => {
   });
 });
 
-// Rosetta tests
-
 describe('t', () => {
   it('should return translated text', () => {
     const r = rosetty<{ test: 'toto' }>(
@@ -128,7 +118,7 @@ describe('t', () => {
           dict: {
             test: 'This is a test',
           },
-          locale: enLocale,
+          locale: 'en-GB',
         },
       },
       'en'
@@ -144,7 +134,7 @@ describe('t', () => {
           dict: {
             test: 'This is a test',
           },
-          locale: enLocale,
+          locale: 'en-GB',
         },
       },
       'en'
@@ -162,7 +152,7 @@ describe('t', () => {
           dict: {
             test: 'This is a test',
           },
-          locale: enLocale,
+          locale: 'en-GB',
         },
       },
       'en',
@@ -180,7 +170,7 @@ describe('t', () => {
           dict: {
             test: 'This is a {{firstName}}',
           },
-          locale: enLocale,
+          locale: 'en-GB',
         },
       },
       'en'
@@ -203,7 +193,7 @@ describe('t', () => {
               titi: 'toto',
             },
           },
-          locale: enLocale,
+          locale: 'en-GB',
         },
       },
       'en'
@@ -221,199 +211,41 @@ describe('t', () => {
   });
 });
 
-// Format JS tests
-
-describe('displayNames', () => {
-  it('should return same value as Intl', () => {
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
+describe('Intl methods', () => {
+  const r = rosetty(
+    {
+      en: {
+        dict: {},
+        locale: 'en-GB',
       },
-      'fr'
-    );
+    },
+    'en'
+  );
 
-    expect(r.displayNames('fr', { type: 'language' })).toEqual(
-      new Intl.DisplayNames(['fr'], { type: 'language' }).of('fr')
-    );
+  it('should format dates and times', () => {
+    const date = new Date('2024-03-20T12:00:00Z');
+    expect(r.dateTimeFormat(date, { dateStyle: 'full' })).toMatch(/Wednesday/);
   });
-});
 
-describe('listFormat', () => {
-  it('should return same value as Intl', () => {
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.listFormat(['a', 'b', 'c'], { type: 'unit' })).toEqual(
-      //@ts-ignore
-      new Intl.ListFormat('fr', { type: 'unit' }).format(['a', 'b', 'c'])
-    );
+  it('should format relative time', () => {
+    expect(r.relativeTimeFormat(-1, 'day')).toBe('1 day ago');
   });
-});
 
-describe('numberFormat', () => {
-  it('should return same value as Intl', () => {
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(
-      r.numberFormat(1230, {
-        style: 'currency',
-        currencySign: 'accounting',
-        currency: 'EUR',
-      })
-    ).toEqual(
-      //@ts-ignore
-      new Intl.NumberFormat('fr', {
-        style: 'currency',
-        currencySign: 'accounting',
-        currency: 'EUR',
-      }).format(1230)
-    );
+  it('should compare strings', () => {
+    expect(r.collator('a', 'b')).toBe(-1);
   });
-});
 
-describe('pluralRules', () => {
-  it('should return same value as Intl', () => {
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.pluralRules(2, { type: 'ordinal' })).toEqual(
-      //@ts-ignore
-      new Intl.PluralRules('fr', { type: 'ordinal' }).select(2)
-    );
+  it('should segment text', () => {
+    const segments = r.segmenter('Hello, world!');
+    expect(Array.from(segments).length).toBeGreaterThan(0);
   });
-});
 
-// Date FNS tests
-describe('format', () => {
-  it('should return same value as Date fns', () => {
-    const dateToTest = new Date();
-
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.format(dateToTest, 'yyyy-MM-dd')).toEqual(
-      format(dateToTest, 'yyyy-MM-dd', { locale: frLocale })
-    );
-  });
-});
-
-describe('formatRelative', () => {
-  it('should return same value as Date fns', () => {
-    const dateToTest = new Date();
-    const yesterdayDate = subDays(dateToTest, 1);
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.formatRelative(dateToTest, yesterdayDate)).toEqual(
-      formatRelative(dateToTest, yesterdayDate, { locale: frLocale })
-    );
-  });
-});
-
-describe('formatDistance', () => {
-  it('should return same value as Date fns', () => {
-    const dateToTest = new Date();
-    const yesterdayDate = subDays(new Date(), 1);
-
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.formatDistance(dateToTest, yesterdayDate)).toEqual(
-      formatDistance(dateToTest, yesterdayDate, { locale: frLocale })
-    );
-  });
-});
-
-describe('formatDistanceToNow', () => {
-  it('should return same value as Date fns', () => {
-    const yesterdayDate = subDays(new Date(), 1);
-
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.formatDistanceToNow(yesterdayDate)).toEqual(
-      formatDistanceToNow(yesterdayDate, { locale: frLocale })
-    );
-  });
-});
-
-describe('formatDuration', () => {
-  it('should return same value as Date fns', () => {
+  it('should format durations', () => {
     const duration = {
-      years: 2,
-      months: 9,
-      weeks: 1,
-      days: 7,
-      hours: 5,
-      minutes: 9,
-      seconds: 30,
+      hours: 2,
+      minutes: 30
     };
-
-    const r = rosetty(
-      {
-        fr: {
-          dict: {},
-          locale: frLocale,
-        },
-      },
-      'fr'
-    );
-
-    expect(r.formatDuration(duration)).toEqual(
-      formatDuration(duration, { locale: frLocale })
-    );
+    
+    expect(r.durationFormat(duration)).toMatch(/2.*30/);
   });
 });

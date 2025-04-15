@@ -1,17 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import type { Locale } from 'date-fns';
-import {
-  format,
-  formatDistance,
-  formatDistanceStrict,
-  formatDistanceToNow,
-  formatDistanceToNowStrict,
-  formatDuration,
-  formatRelative,
-} from 'date-fns';
 import rosetta from 'rosetta';
 
 type BreakDownObject<O, R = void> = {
@@ -30,7 +16,7 @@ export type ObjectDotNotation<O, R = void> = O extends string
 
 export interface Language {
   dict: Record<string, unknown>;
-  locale: Locale;
+  locale: Intl.UnicodeBCP47LocaleIdentifier | Intl.Locale;
 }
 
 export interface RosettyReturn<T> {
@@ -58,37 +44,45 @@ export interface RosettyReturn<T> {
     value: number,
     options: Intl.PluralRulesOptions
   ) => string | undefined;
-  format: (
-    date: number | Date,
-    stringFormat: string,
-    options?: Parameters<typeof format>[2]
+  dateTimeFormat: (
+    value: number | Date,
+    options?: Intl.DateTimeFormatOptions
   ) => string;
-  formatRelative: (
-    date: number | Date,
-    baseDate: number | Date,
-    options?: Parameters<typeof formatRelative>[2]
+  relativeTimeFormat: (
+    value: number,
+    unit: Intl.RelativeTimeFormatUnit,
+    options?: Intl.RelativeTimeFormatOptions
   ) => string;
-  formatDistance: (
-    date: number | Date,
-    baseDate: number | Date,
-    options?: Parameters<typeof formatDistance>[2]
-  ) => string;
-  formatDistanceStrict: (
-    date: number | Date,
-    baseDate: number | Date,
-    options?: Parameters<typeof formatDistanceStrict>[2]
-  ) => string;
-  formatDistanceToNow: (
-    date: number | Date,
-    options?: Parameters<typeof formatDistanceToNow>[1]
-  ) => string;
-  formatDistanceToNowStrict: (
-    date: number | Date,
-    options?: Parameters<typeof formatDistanceToNowStrict>[1]
-  ) => string;
-  formatDuration: (
-    duration: object,
-    options?: Parameters<typeof formatDuration>[1]
+  collator: (
+    str1: string,
+    str2: string,
+    options?: Intl.CollatorOptions
+  ) => number;
+  segmenter: (input: string, options?: Intl.SegmenterOptions) => Intl.Segments;
+  //TODO : To replace https://github.com/microsoft/TypeScript/issues/60608
+  durationFormat: (
+    duration: {
+      years?: number;
+      months?: number;
+      weeks?: number;
+      days?: number;
+      hours?: number;
+      minutes?: number;
+      seconds?: number;
+      milliseconds?: number;
+    },
+    options?: {
+      style?: 'long' | 'short' | 'narrow' | 'digital';
+      years?: 'numeric' | '2-digit' | 'none';
+      months?: 'numeric' | '2-digit' | 'none';
+      weeks?: 'numeric' | '2-digit' | 'none';
+      days?: 'numeric' | '2-digit' | 'none';
+      hours?: 'numeric' | '2-digit' | 'none';
+      minutes?: 'numeric' | '2-digit' | 'none';
+      seconds?: 'numeric' | '2-digit' | 'none';
+      milliseconds?: 'numeric' | 'none';
+      fractionalDigits?: number;
+    }
   ) => string;
 }
 
@@ -112,7 +106,7 @@ export const rosetty = <T>(
     if (
       typeof config[lang] === 'object' &&
       typeof config[lang].dict === 'object' &&
-      typeof config[lang].locale === 'object'
+      typeof config[lang].locale !== 'undefined'
     ) {
       acc[lang] = config[lang];
     }
@@ -130,6 +124,7 @@ export const rosetty = <T>(
 
   const changeLang = (lang: string) => {
     const langConfig = config[lang];
+    console.log(config, lang);
     if (!langConfig) {
       throw new Error(`rosetty: language ${lang} not found`);
     }
@@ -137,6 +132,12 @@ export const rosetty = <T>(
     actualConfig = config[lang];
     actualLang = lang;
     rosettaInstance.locale(lang);
+  };
+
+  const getLocale = () => {
+    return typeof actualConfig!.locale === 'string'
+      ? actualConfig!.locale
+      : actualConfig!.locale.toString();
   };
 
   if (defaultLang) {
@@ -170,76 +171,42 @@ export const rosetty = <T>(
     },
     //Intl Polyfill
     displayNames: (langCode: string, options: Intl.DisplayNamesOptions) => {
-      return new Intl.DisplayNames(
-        [actualConfig?.locale.code as string],
-        options
-      ).of(langCode);
+      return new Intl.DisplayNames([getLocale()], options).of(langCode);
     },
     listFormat: (list: string[], options: Intl.ListFormatOptions) => {
-      return new Intl.ListFormat(actualConfig?.locale.code, options).format(
-        list
-      );
+      return new Intl.ListFormat(getLocale(), options).format(list);
     },
     numberFormat: (value: number, options: Intl.NumberFormatOptions) => {
-      return new Intl.NumberFormat(actualConfig?.locale.code, options).format(
-        value
-      );
+      return new Intl.NumberFormat(getLocale(), options).format(value);
     },
     pluralRules: (value: number, options: Intl.PluralRulesOptions) => {
-      return new Intl.PluralRules(actualConfig?.locale.code, options).select(
-        value
+      return new Intl.PluralRules(getLocale(), options).select(value);
+    },
+    dateTimeFormat: (
+      value: number | Date,
+      options?: Intl.DateTimeFormatOptions
+    ) => {
+      return new Intl.DateTimeFormat(getLocale(), options).format(value);
+    },
+    relativeTimeFormat: (
+      value: number,
+      unit: Intl.RelativeTimeFormatUnit,
+      options?: Intl.RelativeTimeFormatOptions
+    ) => {
+      return new Intl.RelativeTimeFormat(getLocale(), options).format(
+        value,
+        unit
       );
     },
-    //Date FNS i18n
-    format: (
-      date: number | Date,
-      stringFormat: string,
-      options?: Parameters<typeof format>[2]
-    ) =>
-      format(date, stringFormat, { ...options, locale: actualConfig!.locale }),
-    formatRelative: (
-      date: number | Date,
-      baseDate: number | Date,
-      options?: Parameters<typeof formatRelative>[2]
-    ) =>
-      formatRelative(date, baseDate, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
-    formatDistance: (
-      date: number | Date,
-      baseDate: number | Date,
-      options?: Parameters<typeof formatDistance>[2]
-    ) =>
-      formatDistance(date, baseDate, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
-    formatDistanceStrict: (
-      date: number | Date,
-      baseDate: number | Date,
-      options?: Parameters<typeof formatDistanceStrict>[2]
-    ) =>
-      formatDistanceStrict(date, baseDate, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
-    formatDistanceToNow: (
-      date: number | Date,
-      options?: Parameters<typeof formatDistanceToNow>[1]
-    ) =>
-      formatDistanceToNow(date, { ...options, locale: actualConfig!.locale }),
-    formatDistanceToNowStrict: (
-      date: number | Date,
-      options?: Parameters<typeof formatDistanceToNowStrict>[1]
-    ) =>
-      formatDistanceToNowStrict(date, {
-        ...options,
-        locale: actualConfig!.locale,
-      }),
-    formatDuration: (
-      duration: object,
-      options?: Parameters<typeof formatDuration>[1]
-    ) => formatDuration(duration, { ...options, locale: actualConfig!.locale }),
+    collator: (str1: string, str2: string, options?: Intl.CollatorOptions) => {
+      return new Intl.Collator(getLocale(), options).compare(str1, str2);
+    },
+    segmenter: (input: string, options?: Intl.SegmenterOptions) => {
+      return new Intl.Segmenter(getLocale(), options).segment(input);
+    },
+    durationFormat: (duration, options) => {
+      // @ts-ignore - DurationFormat is new and might not be in TS lib yet
+      return new Intl.DurationFormat(getLocale(), options).format(duration);
+    },
   };
 };

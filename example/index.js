@@ -1,6 +1,5 @@
 const { rosetty, locales } = require('rosetty');
 
-const { enGB: enLocale } = locales;
 
 const r = rosetty(
   {
@@ -8,7 +7,7 @@ const r = rosetty(
       dict: {
         test: 'This is a test',
       },
-      locale: enLocale,
+      locale: 'en-GB',
     },
   },
   'en'

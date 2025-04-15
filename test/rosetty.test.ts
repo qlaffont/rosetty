@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { describe, expect, it } from '@jest/globals';
 import '@formatjs/intl-durationformat/polyfill';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { rosetty } from '../src';
 
@@ -243,9 +243,9 @@ describe('Intl methods', () => {
   it('should format durations', () => {
     const duration = {
       hours: 2,
-      minutes: 30
+      minutes: 30,
     };
-    
+
     expect(r.durationFormat(duration)).toMatch(/2.*30/);
   });
 });

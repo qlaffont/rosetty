@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import rosetta from 'rosetta';
 
 type BreakDownObject<O, R = void> = {
@@ -62,10 +58,7 @@ export interface RosettyReturn<T> {
     str2: string,
     options?: Intl.CollatorOptions
   ) => number;
-  segmenter: (
-    input: string,
-    options?: Intl.SegmenterOptions
-  ) => Intl.Segments
+  segmenter: (input: string, options?: Intl.SegmenterOptions) => Intl.Segments;
   //TODO : To replace https://github.com/microsoft/TypeScript/issues/60608
   durationFormat: (
     duration: {
@@ -147,8 +140,6 @@ export const rosetty = <T>(
       : actualConfig!.locale.toString();
   };
 
-
-
   if (defaultLang) {
     changeLang(defaultLang);
   }
@@ -180,27 +171,21 @@ export const rosetty = <T>(
     },
     //Intl Polyfill
     displayNames: (langCode: string, options: Intl.DisplayNamesOptions) => {
-      return new Intl.DisplayNames(
-        [getLocale()],
-        options
-      ).of(langCode);
+      return new Intl.DisplayNames([getLocale()], options).of(langCode);
     },
     listFormat: (list: string[], options: Intl.ListFormatOptions) => {
-      return new Intl.ListFormat(getLocale(), options).format(
-        list
-      );
+      return new Intl.ListFormat(getLocale(), options).format(list);
     },
     numberFormat: (value: number, options: Intl.NumberFormatOptions) => {
-      return new Intl.NumberFormat(getLocale(), options).format(
-        value
-      );
+      return new Intl.NumberFormat(getLocale(), options).format(value);
     },
     pluralRules: (value: number, options: Intl.PluralRulesOptions) => {
-      return new Intl.PluralRules(getLocale(), options).select(
-        value
-      );
+      return new Intl.PluralRules(getLocale(), options).select(value);
     },
-    dateTimeFormat: (value: number | Date, options?: Intl.DateTimeFormatOptions) => {
+    dateTimeFormat: (
+      value: number | Date,
+      options?: Intl.DateTimeFormatOptions
+    ) => {
       return new Intl.DateTimeFormat(getLocale(), options).format(value);
     },
     relativeTimeFormat: (
@@ -208,7 +193,10 @@ export const rosetty = <T>(
       unit: Intl.RelativeTimeFormatUnit,
       options?: Intl.RelativeTimeFormatOptions
     ) => {
-      return new Intl.RelativeTimeFormat(getLocale(), options).format(value, unit);
+      return new Intl.RelativeTimeFormat(getLocale(), options).format(
+        value,
+        unit
+      );
     },
     collator: (str1: string, str2: string, options?: Intl.CollatorOptions) => {
       return new Intl.Collator(getLocale(), options).compare(str1, str2);

@@ -26,37 +26,37 @@ export interface RosettyReturn<T> {
   t: <R>(
     key: keyof R extends keyof T ? ObjectDotNotation<T> : ObjectDotNotation<R>,
     params?: Record<string, any>,
-    dict?: Record<string, R>
+    dict?: Record<string, R>,
   ) => string | undefined;
   displayNames: (
     langCode: string,
-    options: Intl.DisplayNamesOptions
+    options: Intl.DisplayNamesOptions,
   ) => string | undefined;
   listFormat: (
     list: string[],
-    options: Intl.ListFormatOptions
+    options: Intl.ListFormatOptions,
   ) => string | undefined;
   numberFormat: (
     value: number,
-    options: Intl.NumberFormatOptions
+    options: Intl.NumberFormatOptions,
   ) => string | undefined;
   pluralRules: (
     value: number,
-    options: Intl.PluralRulesOptions
+    options: Intl.PluralRulesOptions,
   ) => string | undefined;
   dateTimeFormat: (
     value: number | Date,
-    options?: Intl.DateTimeFormatOptions
+    options?: Intl.DateTimeFormatOptions,
   ) => string;
   relativeTimeFormat: (
     value: number,
     unit: Intl.RelativeTimeFormatUnit,
-    options?: Intl.RelativeTimeFormatOptions
+    options?: Intl.RelativeTimeFormatOptions,
   ) => string;
   collator: (
     str1: string,
     str2: string,
-    options?: Intl.CollatorOptions
+    options?: Intl.CollatorOptions,
   ) => number;
   segmenter: (input: string, options?: Intl.SegmenterOptions) => Intl.Segments;
   //TODO : To replace https://github.com/microsoft/TypeScript/issues/60608
@@ -82,14 +82,14 @@ export interface RosettyReturn<T> {
       seconds?: 'numeric' | '2-digit' | 'none';
       milliseconds?: 'numeric' | 'none';
       fractionalDigits?: number;
-    }
+    },
   ) => string;
 }
 
 export const rosetty = <T>(
   initialConfig: Record<string, Language>,
   defaultLang?: string,
-  translateFallback?: boolean
+  translateFallback?: boolean,
 ): RosettyReturn<T> => {
   let config: Record<string, Language> = initialConfig;
   let actualConfig: Language | undefined;
@@ -97,7 +97,7 @@ export const rosetty = <T>(
 
   if (typeof initialConfig !== 'object') {
     throw new Error(
-      'rosetty: data must be an object with at least one language'
+      'rosetty: data must be an object with at least one language',
     );
   }
 
@@ -118,8 +118,8 @@ export const rosetty = <T>(
       ?.map(([key, value]) => [key, value.dict])
       ?.reduce(
         (prev, [key, value]) => ({ ...prev, [key as string]: value }),
-        {}
-      )
+        {},
+      ),
   );
 
   const changeLang = (lang: string) => {
@@ -184,18 +184,18 @@ export const rosetty = <T>(
     },
     dateTimeFormat: (
       value: number | Date,
-      options?: Intl.DateTimeFormatOptions
+      options?: Intl.DateTimeFormatOptions,
     ) => {
       return new Intl.DateTimeFormat(getLocale(), options).format(value);
     },
     relativeTimeFormat: (
       value: number,
       unit: Intl.RelativeTimeFormatUnit,
-      options?: Intl.RelativeTimeFormatOptions
+      options?: Intl.RelativeTimeFormatOptions,
     ) => {
       return new Intl.RelativeTimeFormat(getLocale(), options).format(
         value,
-        unit
+        unit,
       );
     },
     collator: (str1: string, str2: string, options?: Intl.CollatorOptions) => {

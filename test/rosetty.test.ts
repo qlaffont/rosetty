@@ -1,6 +1,6 @@
-import '@formatjs/intl-durationformat/polyfill';
+import '@formatjs/intl-durationformat/polyfill.js';
 
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'bun:test';
 
 import { rosetty } from '../src';
 
@@ -9,10 +9,12 @@ describe('rosetty', () => {
     expect(rosetty).toBeDefined();
   });
 
-  expect(() => {
-    //@ts-ignore
-    return rosetty();
-  }).toThrowError('rosetty: data must be an object with at least one language');
+  it('throws when data is invalid', () => {
+    expect(() => {
+      //@ts-ignore
+      rosetty();
+    }).toThrow('rosetty: data must be an object with at least one language');
+  });
 });
 
 describe('getCurrentLang', () => {
@@ -28,7 +30,7 @@ describe('getCurrentLang', () => {
           locale: 'fr',
         },
       },
-      'en'
+      'en',
     );
 
     expect(r.getCurrentLang()).toBe('en');
@@ -80,7 +82,7 @@ describe('changeLang', () => {
           locale: 'fr',
         },
       },
-      'en'
+      'en',
     );
 
     expect(r.getCurrentLang()).toBe('en');
@@ -101,12 +103,12 @@ describe('changeLang', () => {
           locale: 'fr',
         },
       },
-      'en'
+      'en',
     );
 
     expect(() => {
       r.changeLang('es');
-    }).toThrowError('rosetty: language es not found');
+    }).toThrow('rosetty: language es not found');
   });
 });
 
@@ -121,7 +123,7 @@ describe('t', () => {
           locale: 'en-GB',
         },
       },
-      'en'
+      'en',
     );
 
     expect(r.t('test')).toEqual('This is a test');
@@ -137,11 +139,11 @@ describe('t', () => {
           locale: 'en-GB',
         },
       },
-      'en'
+      'en',
     );
 
     expect(r.t('toto', {}, { en: { toto: 'this is a test' } })).toEqual(
-      'this is a test'
+      'this is a test',
     );
   });
 
@@ -156,7 +158,7 @@ describe('t', () => {
         },
       },
       'en',
-      true
+      true,
     );
 
     //@ts-ignore
@@ -173,13 +175,13 @@ describe('t', () => {
           locale: 'en-GB',
         },
       },
-      'en'
+      'en',
     );
 
     expect(
       r.t('test', {
         firstName: 'test',
-      })
+      }),
     ).toEqual('This is a test');
   });
 
@@ -196,7 +198,7 @@ describe('t', () => {
           locale: 'en-GB',
         },
       },
-      'en'
+      'en',
     );
 
     //@ts-expect-error
@@ -205,7 +207,7 @@ describe('t', () => {
     expect(
       r.t('test', {
         firstName: 'test',
-      })
+      }),
     ).toEqual('This is a test');
     expect(r.t('toto.titi')).toEqual('toto');
   });
@@ -219,7 +221,7 @@ describe('Intl methods', () => {
         locale: 'en-GB',
       },
     },
-    'en'
+    'en',
   );
 
   it('should format dates and times', () => {
